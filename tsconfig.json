@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "target": "es2019",
+    "lib": ["es2019"],
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "commonjs",
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": [
+    "**/__mocks__/*",
+    "**/__tests__/*",
+    "**/__tests__util/*",
+    "**/node_modules/*"
+  ]
+}
