@@ -1,0 +1,9 @@
+{
+  "name": "firebase-recoil",
+  "version": "0.0.1",
+  "description": "Type and code generation for using Recoil atoms as a store for firebase data",
+  "main": "index.ts",
+  "repository": "https://github.com/sirctseb/firebase-recoil",
+  "author": "Christopher Best <bestchris@gmail.com>",
+  "license": "MIT"
+}
