@@ -1,20 +1,25 @@
 {
   "compilerOptions": {
-    "outDir": "dist",
-    "target": "es2019",
-    "lib": ["es2019"],
-    "sourceMap": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
+    "target": "es2015",
+    "lib": [
+      "dom",
+      "esnext"
+    ],
+    "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "commonjs",
+    "esModuleInterop": true,
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "outDir": "dist",
+    "declaration": true
   },
-  "include": ["src/**/*.ts"],
+  "include": [
+    "static.ts",
+  ],
   "exclude": [
-    "**/__mocks__/*",
-    "**/__tests__/*",
-    "**/__tests__util/*",
-    "**/node_modules/*"
+    "node_modules",
   ]
 }
