@@ -1,0 +1,54 @@
+/* Snippets taken from
+ * https://github.com/sirctseb/bolt/blob/master/docs/language.md
+ * the idea being that they should cover most features of the language
+ */
+
+// Map Types
+
+type Model {
+  users: Map<String, User>,
+  products: Map<ProductID, Product>
+}
+
+type ProductID extends String {
+  validate() { this.length <= 20 }
+}
+
+// Generic Types
+
+type Pair<X, Y> {
+  first: X,
+  second: Y,
+}
+
+type Model {
+  name: String,
+  prop: Pair<Number, String>;
+}
+
+// Paths
+
+// @firebase-recoil-declare ExamplePathEntity
+path /path/to/data is PathExampleType {
+  read() { <true-iff-reading-this-path-is-allowed> }
+
+  write() { <true-iff-writing-this-path-is-allowed> }
+
+  validate() { <additional-validation-rules> }
+}
+
+// Database references
+// @firebase-recoil-declare ProductEntity
+path /products is Product[];
+// if require explicit path param:
+// path /products/{productId} is Product;
+// if you really want array notation but also want to give a param name:
+// @firebase-recoil-declare ProductEntity(productId)
+path /products is Product[];
+
+type Product {
+  validate() { this.id == key() }
+
+  id: String,
+  name: String
+}

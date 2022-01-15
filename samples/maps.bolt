@@ -1,0 +1,8 @@
+type Widget {
+  thing: String;
+}
+
+// @firebase-recoil declare Widgets 
+path /widgets is Map<WidgetId, Widget>;
+
+

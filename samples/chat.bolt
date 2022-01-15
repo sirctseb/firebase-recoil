@@ -1,0 +1,97 @@
+/*
+ * Chat room application model.
+ */
+// @firebase-recoil-export Rooms
+path /rooms is Map<RoomID, RoomInfo>;
+// TODO support for map, otherwise
+path /rooms/roomId is RoomInfo;
+// which doesn't let us apply constraints to the key
+// how to infer a name for the parameter? just take the type name of the key?
+
+// @firebase-recoil-export Rooms<{roomId: RoomID}>
+// something like that
+path /rooms is Map<RoomID, RoomInfo>;
+
+path /posts/{roomid} {
+  validate() { getRoomInfo(roomid) != null }
+}
+
+path /posts/{roomid}/{postid} is Timestamped<Post> {
+  write() { isMember(getRoomInfo(roomid)) }
+}
+
+// TODO
+// could we add an inline export to members here?
+type RoomInfo {
+  read() { isMember(this) || isUser(this.creator) }
+
+  create() { true }
+  update() { isUser(prior(this).creator) }
+  delete() { isUser(prior(this).creator) }
+
+  name: NameString,
+  creator: UserID,
+  members: Member[],
+}
+
+getRoomInfo(id) { prior(root).rooms[id] }
+
+isMember(roomInfo) {
+  roomInfo.members[currentUser()] != null && !roomInfo.members[currentUser()].isBanned
+}
+
+type Post {
+  // Allow create (but not modify/delete).
+  create() { true }
+
+  from: UserID,
+  message: MessageString,
+}
+
+type MessageString extends String {
+  validate() { this.length > 0 && this.length <= 140 }
+}
+
+type Member {
+  // Anyone can add themselves to a Room with their own nickname.
+  create() { isUser(key()) }
+
+  nickname: NameString,
+  isBanned: Boolean,
+}
+
+type NameString {
+  validate() { this.length > 0 && this.length <= 32 }
+}
+
+type Timestamped<T> extends T {
+  created: Created,
+  // modified: Modified,
+}
+
+type Created extends Number {
+  validate() { initial(this, now) }
+}
+
+type Modified extends Number {
+  validate() { this == now }
+}
+
+type PushID extends String {
+  validate() { this.length == 20 }
+}
+
+type RoomID extends String {
+  validate() { this.length >= 1 && this.length <= 32 }
+}
+
+type UserID extends String {
+  // Only a user can create content with thier userid.
+  validate() { isUser(this) }
+}
+
+isUser(uid) { auth != null && uid == currentUser() }
+currentUser() { auth.uid }
+
+initial(value, init) { value == (isInitial(value) ? init : prior(value)) }
+isInitial(value) { prior(value) == null }
